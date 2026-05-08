@@ -4,6 +4,7 @@ import express from "express";
 import { testConexion } from "./db/test-conexion.js";
 import { manejarErrores } from "./middlewares/manejar-errores.js";
 import { router as v1EspecialidadesRutas } from "./rutas/especialidades-rutas.js";
+import { router as v1EstadisticasRutas } from "./rutas/estadisticas-rutas.js";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.get('/', (req,res) => {
 |--------------------------------------------------------------------------
 */
 app.use('/api/v1/especialidades', v1EspecialidadesRutas);
+app.use('/api/v1/estadisticas', v1EstadisticasRutas);
 
 /*
 |--------------------------------------------------------------------------
