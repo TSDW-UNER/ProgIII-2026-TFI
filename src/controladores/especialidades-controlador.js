@@ -28,17 +28,25 @@ export default class EspecialidadesControlador {
         try {
             const { id_especialidad } = req.params;
             const especialidad = await this.especialidades.buscarPorId(id_especialidad);
-
-            if (especialidad.length === 0) {
+            /*
+            |--------------------------------------------------------------------------
+            | VALIDAR EXISTENCIA
+            |--------------------------------------------------------------------------
+            */
+            if (!especialidad) {
                 return res.status(404).json({
                     estado: false,
                     mensaje: 'Especialidad no encontrada'
                 });
             }
-
+            /*
+            |--------------------------------------------------------------------------
+            | RESPUESTA
+            |--------------------------------------------------------------------------
+            */
             res.status(200).json({
                 estado: true,
-                especialidad: especialidad[0]
+                especialidad
             });
         }
         catch (error) {

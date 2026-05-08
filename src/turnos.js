@@ -21,8 +21,8 @@ app.get('/', (req,res) => {
 
     console.log('test get');
 
-    res.status(200).send({
-        estado: 'ok',
+    res.status(200).json({
+        estado: true,
         mensaje: 'API ok'
     });
 });

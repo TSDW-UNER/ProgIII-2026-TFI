@@ -36,7 +36,7 @@ export default class Especialidades {
 
         const [especialidades] = await pool.execute(sql, [id]);
 
-        return especialidades;
+        return especialidades[0];
     }
 
     /*
