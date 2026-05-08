@@ -2,20 +2,74 @@ import express from 'express';
 
 import EspecialidadesControlador from "../controladores/especialidades-controlador.js";
 
+import {
+    validarCrearEspecialidad,
+    validarEditarEspecialidad,
+    validarIdEspecialidad
+} from "../validaciones/especialidades-validacion.js";
+
+import { validarCampos } from "../middlewares/validar-campos.js";
+
 const router = express.Router();
 
 const especialidadesControlador = new EspecialidadesControlador();
-//Buscar todas
-router.get('/', especialidadesControlador.buscarTodas);
-//Buscar por id
-router.get('/:id_especialidad', especialidadesControlador.buscarPorId);
-// //Modificar especialidad
-router.put('/:id_especialidad', especialidadesControlador.modificarPorId);
-// //Agregar especialidad
-router.post('/', especialidadesControlador.crear);
-//Borrar por id
-router.delete('/:id_especialidad', especialidadesControlador.eliminarPorId);
-// //Restaurar por id
-// router.put('/borradas/:id_especialidad', especialidadesControlador);
 
-export {router};
+/*
+|--------------------------------------------------------------------------
+| BUSCAR TODAS
+|--------------------------------------------------------------------------
+*/
+router.get(
+    '/',
+    especialidadesControlador.buscarTodas
+);
+
+/*
+|--------------------------------------------------------------------------
+| BUSCAR POR ID
+|--------------------------------------------------------------------------
+*/
+router.get(
+    '/:id_especialidad',
+    validarIdEspecialidad,
+    validarCampos,
+    especialidadesControlador.buscarPorId
+);
+
+/*
+|--------------------------------------------------------------------------
+| CREAR ESPECIALIDAD
+|--------------------------------------------------------------------------
+*/
+router.post(
+    '/',
+    validarCrearEspecialidad,
+    validarCampos,
+    especialidadesControlador.crear
+);
+
+/*
+|--------------------------------------------------------------------------
+| MODIFICAR ESPECIALIDAD
+|--------------------------------------------------------------------------
+*/
+router.put(
+    '/:id_especialidad',
+    validarEditarEspecialidad,
+    validarCampos,
+    especialidadesControlador.modificarPorId
+);
+
+/*
+|--------------------------------------------------------------------------
+| ELIMINAR ESPECIALIDAD
+|--------------------------------------------------------------------------
+*/
+router.delete(
+    '/:id_especialidad',
+    validarIdEspecialidad,
+    validarCampos,
+    especialidadesControlador.eliminarPorId
+);
+
+export { router };
