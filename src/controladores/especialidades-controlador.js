@@ -1,64 +1,73 @@
 import EspecialidadesServicio from "../servicios/especialidades-servicio.js";
 
 export default class EspecialidadesControlador {
-    constructor(){
+    constructor() {
         this.especialidades = new EspecialidadesServicio
     }
 
-    buscarTodas =  async (req,res) => {
+    buscarTodas = async (req, res) => {
         try {
             const especialidades = await this.especialidades.buscarTodas();
             res.status(200).json(
-                {'estado': true, 
-                 'especialidades': especialidades});
+                {
+                    'estado': true,
+                    'especialidades': especialidades
+                });
         }
-        catch(error) {
+        catch (error) {
             console.log(`Error en GET /especialidades ${error}`);
             res.status(500).json({
-                'estado': false, 
+                'estado': false,
                 'mensaje': 'Error interno'
             });
 
         }
     };
 
-    buscarPorId = async (req,res) => {
+    buscarPorId = async (req, res) => {
         try {
-            const {id_especialidad} = req.params;
-            const especialidades = await this.especialidades.buscarPorId(id_especialidad);
-            
-            res.status(200).json(
-                {'estado': 'ok', 
-                 'especialidad': especialidades});
-        }
-        catch(error) {
-            console.log(`Error en GET /especialidades ${error}`);
-            res.status(500).json({
-                'estado': false, 
-                'mensaje': 'Error interno'
-            });
+            const { id_especialidad } = req.params;
+            const especialidad = await this.especialidades.buscarPorId(id_especialidad);
 
+            if (especialidad.length === 0) {
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: 'Especialidad no encontrada'
+                });
+            }
+
+            res.status(200).json({
+                estado: true,
+                especialidad: especialidad[0]
+            });
+        }
+        catch (error) {
+            console.log(`Error en GET /especialidades/:id ${error}`);
+            res.status(500).json({
+                estado: false,
+                mensaje: 'Error interno'
+            });
         }
     }
 
     modificarPorId = async (req, res) => {
-    try {
-        const { id_especialidad } = req.params;
-        const { nombre } = req.body;
+        try {
+            const { id_especialidad } = req.params;
+            const { nombre } = req.body;
 
-        const actualizado = await this.especialidades.modificarPorId(id_especialidad, nombre);
+            const actualizado = await this.especialidades.modificarPorId(id_especialidad, nombre);
 
-        if (!actualizado) {
-            return res.status(404).json({
-                estado: false,
-                mensaje: "Especialidad no encontrada o inactiva"
+            if (!actualizado) {
+                return res.status(404).json({
+                    estado: false,
+                    mensaje: "Especialidad no encontrada o inactiva"
+                });
+            }
+
+            res.status(200).json({
+                estado: true,
+                mensaje: "Especialidad actualizada correctamente"
             });
-        }
-
-        res.status(200).json({
-            estado: true,
-            mensaje: "Especialidad actualizada correctamente"
-        });
 
         } catch (error) {
             res.status(500).json({ estado: false, mensaje: "Error interno" });
@@ -101,9 +110,9 @@ export default class EspecialidadesControlador {
             }
         } catch (error) {
             console.error(error);
-            res.status(500).json({ 
-                estado: false, 
-                mensaje: 'Error interno al crear la especialidad' 
+            res.status(500).json({
+                estado: false,
+                mensaje: 'Error interno al crear la especialidad'
             });
         }
     }
