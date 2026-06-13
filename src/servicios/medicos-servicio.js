@@ -25,4 +25,8 @@ export default class MedicosServicio {
     eliminarPorId = async (id) => {
         return await this.medicos.eliminarPorId(id);
     }
+
+    asociarMedicoObrasSociales = async (id_medico, obras_sociales) => {
+        return await this.medicos.relacionarConObraSocial(id_medico, obras_sociales); 
+    }
 }

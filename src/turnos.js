@@ -7,6 +7,7 @@ import { router as v1EspecialidadesRutas } from "./rutas/especialidades-rutas.js
 import { router as v1EstadisticasRutas } from "./rutas/estadisticas-rutas.js";
 import { router as v1ObrasSocialesRutas} from "./rutas/obras-sociales-rutas.js";
 import { router as v1MedicosRutas } from "./rutas/medicos-rutas.js";
+import { router as v1PacientesRutas } from "./rutas/pacientes-rutas.js";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api/v1/especialidades', v1EspecialidadesRutas);
 app.use('/api/v1/estadisticas', v1EstadisticasRutas);
 app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
 app.use('/api/v1/medicos', v1MedicosRutas);
+app.use('/api/v1/pacientes', v1PacientesRutas);
 
 /*
 |--------------------------------------------------------------------------

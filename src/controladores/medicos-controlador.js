@@ -102,4 +102,28 @@ export default class MedicosControlador {
             next(error);
         }
     };
+
+    asociarMedicoObrasSociales = async (req, res, next) => {
+        try {            
+            const { id_medico } = req.params;
+            const { obras_sociales } = req.body;
+
+            const relacion = await this.servicio.asociarMedicoObrasSociales(id_medico, obras_sociales);
+
+            if (!relacion) {
+                return res.status(400).json({
+                    estado: false,
+                    mensaje: 'No se pudieron crear las relaciones con las obras sociales'
+                });
+            }
+
+            res.status(201).json({
+                estado: true,
+                mensaje: 'Médico y obras sociales vinculados correctamente'
+            });
+
+        } catch (error) {
+            next(error);
+        }
+    }
 }

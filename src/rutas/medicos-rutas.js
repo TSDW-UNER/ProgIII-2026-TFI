@@ -4,7 +4,8 @@ import { validarCampos } from "../middlewares/validar-campos.js";
 import {
     validarCrearMedico,
     validarEditarMedico,
-    validarIdMedico
+    validarIdMedico,
+    validarAsociarObrasSociales
 } from "../validaciones/medicos-validacion.js";
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.post('/', validarCrearMedico, validarCampos, controlador.crear);
 router.put('/:id_medico', validarEditarMedico, validarCampos, controlador.modificarPorId);
 
 router.delete('/:id_medico', validarIdMedico, validarCampos, controlador.eliminarPorId);
+
+router.post('/:id_medico/obras-sociales', validarAsociarObrasSociales, validarCampos, controlador.asociarMedicoObrasSociales);
 
 export { router };
