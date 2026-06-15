@@ -8,11 +8,8 @@ export default class Medicos {
     |--------------------------------------------------------------------------
     */
     buscarTodos = async () => {
-        const sql = `
-            SELECT id_medico, matricula, valor_consulta, id_usuario, id_especialidad
-            FROM medicos
-        `;
-        const [medicos] = await pool.query(sql);
+        const sql = "SELECT * FROM v_medicos";        
+        const [medicos] = await pool.execute(sql);
         return medicos;
     }
 
@@ -22,15 +19,9 @@ export default class Medicos {
     |--------------------------------------------------------------------------
     */
     buscarPorId = async (id) => {
-        const sql = `
-            SELECT id_medico, matricula, valor_consulta, id_usuario, id_especialidad
-            FROM medicos
-            WHERE id_medico = ?
-        `;
-        const [medicos] = await pool.execute(sql, [id]);
-        
-        if (medicos.length === 0) return null;
-        return medicos[0];
+        const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
+        const [medico] = await pool.execute(sql, [id]);
+        return medico[0];
     }
 
     /*

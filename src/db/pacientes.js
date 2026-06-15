@@ -8,10 +8,7 @@ export default class Pacientes {
     |--------------------------------------------------------------------------
     */
     buscarTodos = async () => {
-        const sql = `
-            SELECT id_paciente, id_usuario, id_obra_social
-            FROM pacientes
-        `;
+        const sql = `SELECT * FROM v_pacientes`;
         const [pacientes] = await pool.query(sql);
         return pacientes;
     }
@@ -21,17 +18,13 @@ export default class Pacientes {
     | BUSCAR POR ID
     |--------------------------------------------------------------------------
     */
-    buscarPorId = async (id) => {
-        const sql = `
-            SELECT id_paciente, id_usuario, id_obra_social
-            FROM pacientes
-            WHERE id_paciente = ?
-        `;
-        const [pacientes] = await pool.execute(sql, [id]);
-        
-        if (pacientes.length === 0) return null;
-        return pacientes[0];
+
+    buscarPorId = async(id) => {
+        const sql = `SELECT * FROM pacientes WHERE id_paciente = ?`;
+        const [paciente] = await pool.execute(sql, [id]);
+        return paciente[0];
     }
+
 
     /*
     |--------------------------------------------------------------------------
