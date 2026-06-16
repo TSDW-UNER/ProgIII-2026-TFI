@@ -5,7 +5,7 @@ import ObrasSocialesServicio from "../servicios/obras-sociales-servicio.js";
 
 export default class TurnosReservasServicio {
 
-    constructor(){
+    constructor() {
         this.turnosReservas = new TurnosReservas();
         this.medicos = new MedicosServicio();
         this.pacientes = new PacientesServicio();
@@ -27,10 +27,10 @@ export default class TurnosReservasServicio {
 
         let valor = medico.valor_consulta;
 
-        if(obra_social.es_particular === 0){
-            valor = valor - (obra_social.porcentaje_descuento * valor);
+        if (obra_social.es_particular === 0) {
+            valor = valor - ((obra_social.porcentaje_descuento / 100) * valor);
         }
-        
+
         turnoReserva.valor_total = valor;
         turnoReserva.id_obra_social = paciente.id_obra_social;
 

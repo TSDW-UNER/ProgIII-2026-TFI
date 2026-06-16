@@ -6,6 +6,10 @@ import {
     validarEditarPaciente,
     validarIdPaciente
 } from "../validaciones/pacientes-validacion.js";
+import {
+    esAutenticado,
+    verificarRol
+} from "../auth/auth-middleware.js";
 
 const router = express.Router();
 const controlador = new PacientesControlador();
@@ -14,10 +18,31 @@ router.get('/', controlador.buscarTodos);
 
 router.get('/:id_paciente', validarIdPaciente, validarCampos, controlador.buscarPorId);
 
-router.post('/', validarCrearPaciente, validarCampos, controlador.crear);
+router.post(
+    '/',
+    esAutenticado,
+    verificarRol([3]),
+    validarCrearPaciente,
+    validarCampos,
+    controlador.crear
+);
 
-router.put('/:id_paciente', validarEditarPaciente, validarCampos, controlador.modificarPorId);
+router.put(
+    '/:id_paciente',
+    esAutenticado,
+    verificarRol([3]),
+    validarEditarPaciente,
+    validarCampos,
+    controlador.modificarPorId
+);
 
-router.delete('/:id_paciente', validarIdPaciente, validarCampos, controlador.eliminarPorId);
+router.delete(
+    '/:id_paciente',
+    esAutenticado,
+    verificarRol([3]),
+    validarIdPaciente,
+    validarCampos,
+    controlador.eliminarPorId
+);
 
 export { router };

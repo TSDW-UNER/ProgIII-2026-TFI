@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+import morgan from "morgan";
+import cors from "cors";
 
 import { testConexion } from "./db/test-conexion.js";
 import { manejarErrores } from "./middlewares/manejar-errores.js";
@@ -14,11 +16,24 @@ import { router as v1PacientesRutas } from "./rutas/pacientes-rutas.js";
 import { router as v1TurnosReservas } from "./rutas/turnos-reservas-rutas.js";
 
 import authRutas from "./auth/auth-rutas.js";
-
+import { swaggerUi, specs } from "./swagger.js";
 const app = express();
 
 await testConexion();
 
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(specs)
+);
+
+/*
+|--------------------------------------------------------------------------
+| MIDDLEWARES GLOBALES
+|--------------------------------------------------------------------------
+*/
+app.use(morgan("dev"));
+app.use(cors());
 app.use(express.json());
 
 /*
