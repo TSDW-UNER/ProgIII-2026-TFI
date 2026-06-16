@@ -10,6 +10,11 @@ import {
 
 import { validarCampos } from "../middlewares/validar-campos.js";
 
+import {
+    esAutenticado,
+    verificarRol
+} from "../auth/auth-middleware.js";
+
 const router = express.Router();
 
 const especialidadesControlador = new EspecialidadesControlador();
@@ -43,6 +48,8 @@ router.get(
 */
 router.post(
     '/',
+    esAutenticado,
+    verificarRol([1]),
     validarCrearEspecialidad,
     validarCampos,
     especialidadesControlador.crear
@@ -55,6 +62,8 @@ router.post(
 */
 router.put(
     '/:id_especialidad',
+    esAutenticado,
+    verificarRol([1]),
     validarEditarEspecialidad,
     validarCampos,
     especialidadesControlador.modificarPorId
@@ -67,6 +76,8 @@ router.put(
 */
 router.delete(
     '/:id_especialidad',
+    esAutenticado,
+    verificarRol([1]),
     validarIdEspecialidad,
     validarCampos,
     especialidadesControlador.eliminarPorId

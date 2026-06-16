@@ -59,7 +59,7 @@ app.use('/api/v1/turnos-reservas', v1TurnosReservas);
 */
 app.use(manejarErrores);
 
-const PUERTO = process.env.PUERTO;
+const PUERTO = process.env.PORT;
 
 /*
 |--------------------------------------------------------------------------
