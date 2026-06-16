@@ -43,54 +43,64 @@ export default class EstadisticasControlador {
     */
     generarPDF = async (req, res) => {
 
-        try {
+    try {
 
-            const datos = await this.estadisticas.obtenerTurnos();
+        const datos = await this.estadisticas.obtenerTurnos();
 
-            const doc = new PDFDocument();
+        const doc = new PDFDocument();
 
-            res.setHeader(
-                'Content-Type',
-                'application/pdf'
-            );
+        res.setHeader(
+            'Content-Type',
+            'application/pdf'
+        );
 
-            res.setHeader(
-                'Content-Disposition',
-                'inline; filename=estadisticas.pdf'
-            );
+        res.setHeader(
+            'Content-Disposition',
+            'inline; filename=estadisticas.pdf'
+        );
 
-            doc.pipe(res);
+        doc.pipe(res);
 
-            /*
-            |--------------------------------------------------------------------------
-            | TÍTULO
-            |--------------------------------------------------------------------------
-            */
-            doc
-                .fontSize(20)
-                .text('Estadísticas de Turnos', {
-                    align: 'center'
-                });
-
-            doc.moveDown();
-
-            /*
-            |--------------------------------------------------------------------------
-            | DATOS
-            |--------------------------------------------------------------------------
-            */
-            datos.forEach((item) => {
-
-                doc.text(
-                    `Médico: ${item.medico_nombre} - Turnos: ${item.cantidad}`
-                );
+        /*
+        |--------------------------------------------------------------------------
+        | TÍTULO
+        |--------------------------------------------------------------------------
+        */
+        doc
+            .fontSize(20)
+            .text('Estadísticas de Turnos por Especialidad', {
+                align: 'center'
             });
 
-            doc.end();
+        doc.moveDown(2); // Dejamos un poco más de espacio
+
+        /*
+        |--------------------------------------------------------------------------
+        | DATOS
+        |--------------------------------------------------------------------------
+        */
+        doc.fontSize(12);
+
+        if (datos && datos.length > 0) {
+            datos.forEach((item) => {
+                const especialidad = item.especialidad || 'Sin nombre';
+                const turnos = item.cantidad_turnos !== undefined ? item.cantidad_turnos : 0;
+                const facturacion = item.facturacion_total !== undefined ? item.facturacion_total : 0;
+
+                doc.text(
+                    `Especialidad: ${especialidad} | Turnos del mes anterior: ${turnos} | Facturación: $${facturacion}`
+                );
+                doc.moveDown(0.5);
+            });
+        } else {
+            doc.text('No se encontraron datos estadísticos para mostrar.');
+        }
+
+        doc.end();
 
         } catch(error) {
 
-            console.error(error);
+            console.error("Error exacto en la generación del PDF:", error);
 
             res.status(500).json({
                 estado: false,
