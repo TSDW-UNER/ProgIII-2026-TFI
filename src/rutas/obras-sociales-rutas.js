@@ -9,14 +9,14 @@ import {
 import {
     esAutenticado,
     verificarRol
-} from "../auth/auth-middleware.js";
+} from "../middlewares/auth-middleware.js";
 
 const router = express.Router();
 const controlador = new ObrasSocialesControlador();
 
-router.get('/', controlador.buscarTodas);
+router.get('/', esAutenticado, verificarRol([3]), controlador.buscarTodas);
 
-router.get('/:id_obra_social', validarIdObraSocial, validarCampos, controlador.buscarPorId);
+router.get('/:id_obra_social', esAutenticado, verificarRol([3]), validarIdObraSocial, validarCampos, controlador.buscarPorId);
 
 router.post(
     '/',

@@ -10,14 +10,14 @@ import {
 import {
     esAutenticado,
     verificarRol
-} from "../auth/auth-middleware.js";
+} from "../middlewares/auth-middleware.js";
 
 const router = express.Router();
 const controlador = new MedicosControlador();
 
-router.get('/', controlador.buscarTodos);
+router.get('/', esAutenticado, verificarRol([2,3]), controlador.buscarTodos);
 
-router.get('/:id_medico', validarIdMedico, validarCampos, controlador.buscarPorId);
+router.get('/:id_medico', esAutenticado, verificarRol([2,3]), validarIdMedico, validarCampos, controlador.buscarPorId);
 
 router.post(
     '/',

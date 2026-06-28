@@ -9,7 +9,7 @@ import {
 import {
     esAutenticado,
     verificarRol
-} from "../auth/auth-middleware.js";
+} from "../middlewares/auth-middleware.js";
 
 const router = express.Router();
 const controlador = new PacientesControlador();

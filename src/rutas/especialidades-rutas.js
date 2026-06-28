@@ -13,7 +13,7 @@ import { validarCampos } from "../middlewares/validar-campos.js";
 import {
     esAutenticado,
     verificarRol
-} from "../auth/auth-middleware.js";
+} from "../middlewares/auth-middleware.js";
 
 const router = express.Router();
 
