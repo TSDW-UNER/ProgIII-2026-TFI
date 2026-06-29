@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || "mi_clave_secreta_super_segura_UNER"; 
 
-// se valida si el token existe y es real
+
 export const esAutenticado = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -20,10 +20,13 @@ export const esAutenticado = (req, res, next) => {
     });
 };
 
-// aca se valida si el rol tiene permiso
+
 export const verificarRol = (rolesPermitidos) => {
     return (req, res, next) => {
-        if (!req.user || !rolesPermitidos.includes(req.user.rol)) {
+        const usuario = req.user;
+        const rolUsuario = usuario?.rol || usuario?.user?.rol;
+
+        if (!usuario || !rolesPermitidos.includes(rolUsuario)) {
             return res.status(403).json({ estado: false, mensaje: "Acceso denegado. Permisos insuficientes." });
         }
         next();
