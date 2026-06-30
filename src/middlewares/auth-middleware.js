@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || "mi_clave_secreta_super_segura_UNER"; 
+process.loadEnvFile();
 
 // se valida si el token existe y es real
 export const esAutenticado = (req, res, next) => {
@@ -11,7 +11,7 @@ export const esAutenticado = (req, res, next) => {
         return res.status(401).json({ estado: false, mensaje: "Acceso denegado. Se requiere token." });
     }
 
-    jwt.verify(token, JWT_SECRET, (err, usuarioDecodificado) => {
+    jwt.verify(token, process.env.JWT_SECRET , (err, usuarioDecodificado) => {
         if (err) {
             return res.status(403).json({ estado: false, mensaje: "Token inválido o expirado." });
         }
