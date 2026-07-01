@@ -1,39 +1,24 @@
-import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import { Strategy as LocalSrategy } from "passport-local";
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { pool } from '../db/conexion.js';
 
-import UsuariosServicio from "..//servicios/usuarios-servicio.js";
+export const configPassport = (passport) => {
+    const opts = {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: process.env.JWT_SECRET
+    };
 
-const estrategia = new LocalSrategy({
-    usernameField: 'email', 
-    passwordField: 'contrasenia'
-}, 
-    async (email, contrasenia, done) => {
-        try{
-            const usuariosServicio = new UsuariosServicio(); 
-            const usuario = await usuariosServicio.buscar(email, contrasenia);
-            if(!usuario){
-                return done(null, false, { estado: false, mensaje: 'Login incorrecto!'})
+    passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
+        try {
+            const [rows] = await pool.execute(
+                'SELECT id_usuario, rol FROM usuarios WHERE id_usuario = ? AND activo = 1',
+                [jwt_payload.id_usuario]
+            );
+            if (rows.length > 0) {
+                return done(null, rows[0]);
             }
-            return done(null, usuario, {estado: true, mensaje: 'Login correcto!'})
+            return done(null, false);
+        } catch (error) {
+            return done(error, false);
         }
-        catch(exc){
-            done(exc);
-        }
-    }
-)
-
-const validacion = new JwtStrategy({
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), 
-    secretOrKey: process.env.JWT_SECRET    
-},
-    async (jwtPayload, done) => { 
-        const usuariosServicio = new UsuariosServicio();
-        const usuario = await usuariosServicio.buscarPorId(jwtPayload.id_usuario);
-        if(!usuario){
-            return done(null, false, { mensaje: 'Token incorrecto!'});
-        }
-
-        return done(null, usuario);
-    }    
-)
-export { estrategia, validacion };
+    }));
+};

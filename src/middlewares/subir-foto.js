@@ -7,8 +7,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
-        const nombre = `foto_${Date.now()}${ext}`;
-        cb(null, nombre);
+        cb(null, `foto_${Date.now()}${ext}`);
     }
 });
 
@@ -16,7 +15,6 @@ const filtroArchivo = (req, file, cb) => {
     const tiposPermitidos = /jpeg|jpg|png|webp/;
     const esValido = tiposPermitidos.test(path.extname(file.originalname).toLowerCase())
         && tiposPermitidos.test(file.mimetype);
-
     if (esValido) {
         cb(null, true);
     } else {

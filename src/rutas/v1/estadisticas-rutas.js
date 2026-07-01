@@ -1,29 +1,11 @@
 import express from "express";
-
 import EstadisticasControlador from "../../controladores/estadisticas-controlador.js";
+import { esAutenticado, verificarRol } from "../../middlewares/auth-middleware.js";
 
 const router = express.Router();
-
 const estadisticasControlador = new EstadisticasControlador();
 
-/*
-|--------------------------------------------------------------------------
-| ESTADÍSTICAS TURNOS
-|--------------------------------------------------------------------------
-*/
-router.get(
-    '/turnos',
-    estadisticasControlador.obtenerTurnos
-);
-
-/*
-|--------------------------------------------------------------------------
-| PDF ESTADÍSTICAS
-|--------------------------------------------------------------------------
-*/
-router.get(
-    '/pdf',
-    estadisticasControlador.generarPDF
-);
+router.get('/turnos', esAutenticado, verificarRol([3]), estadisticasControlador.obtenerTurnos);
+router.get('/pdf', esAutenticado, verificarRol([3]), estadisticasControlador.generarPDF);
 
 export { router };

@@ -1,21 +1,21 @@
 import express from 'express';
-import AuthController from '../../controladores/auth-controlador.js';
-
 import { check } from 'express-validator';
 import { validarCampos } from '../../middlewares/validar-campos.js';
+import AuthControlador from '../../controladores/auth-controlador.js';
 
 const router = express.Router();
-const authController = new AuthController();
+const controlador = new AuthControlador();
 
-router.post('/login', 
+router.post('/login',
     [
         check('email')
-            .notEmpty().withMessage('El correo electrónico es requerido!.')
-            .isEmail().withMessage('Revisar el formato del correo electrónico.'),
+            .notEmpty().withMessage('El email es requerido.')
+            .isEmail().withMessage('Formato de email inválido.'),
         check('contrasenia')
             .notEmpty().withMessage('La contraseña es requerida.'),
         validarCampos
-    ], 
-    authController.login);
+    ],
+    controlador.login
+);
 
-export {router};
+export { router };

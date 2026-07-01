@@ -1,14 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
-
 import express from "express";
-import morgan from "morgan";
 import cors from "cors";
+import morgan from "morgan";
 import passport from "passport";
-
 import { testConexion } from "./db/test-conexion.js";
 import { manejarErrores } from "./middlewares/manejar-errores.js";
-import { estrategia, validacion} from './config/passport.js';
+import { configPassport } from "./config/passport.js";
 
 import { router as v1EspecialidadesRutas } from "./rutas/v1/especialidades-rutas.js";
 import { router as v1EstadisticasRutas } from "./rutas/v1/estadisticas-rutas.js";
@@ -16,27 +14,22 @@ import { router as v1ObrasSocialesRutas } from "./rutas/v1/obras-sociales-rutas.
 import { router as v1MedicosRutas } from "./rutas/v1/medicos-rutas.js";
 import { router as v1PacientesRutas } from "./rutas/v1/pacientes-rutas.js";
 import { router as v1TurnosReservas } from "./rutas/v1/turnos-reservas-rutas.js";
-
 import { router as v1AuthRutas } from "./rutas/v1/auth-rutas.js";
+import { router as v1UsuariosRutas } from "./rutas/v1/usuarios-rutas.js";
 import { swaggerUi, specs } from "./swagger.js";
+
 const app = express();
 
 await testConexion();
 
-app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(specs)
-);
-
-/*
-|--------------------------------------------------------------------------
-| MIDDLEWARES GLOBALES
-|--------------------------------------------------------------------------
-*/
-app.use(morgan("dev"));
+// Middlewares globales
 app.use(cors());
+app.use(morgan("dev"));
 app.use(express.json());
+
+// Passport
+configPassport(passport);
+app.use(passport.initialize());
 
 /*
 |--------------------------------------------------------------------------
@@ -44,41 +37,29 @@ app.use(express.json());
 |--------------------------------------------------------------------------
 */
 app.get('/', (req, res) => {
-
-    console.log('test get');
-
-    res.status(200).json({
-        estado: true,
-        mensaje: 'API ok'
-    });
+    res.status(200).json({ estado: true, mensaje: 'API ok' });
 });
 
 /*
 |--------------------------------------------------------------------------
-| CONFIG PASSPORT
+| RUTAS PÚBLICAS (sin autenticación)
 |--------------------------------------------------------------------------
 */
-
-passport.use(estrategia);
-passport.use(validacion);
-app.use(passport.initialize());
+app.use('/api/v1/auth', v1AuthRutas);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 /*
 |--------------------------------------------------------------------------
-| RUTAS API
+| RUTAS PROTEGIDAS (requieren JWT)
 |--------------------------------------------------------------------------
 */
-
-// LOGIN JWT
-app.use('/api/v1/auth', v1AuthRutas);
-
-app.use('/api/v1/especialidades', passport.authenticate('jwt', {session:false}), v1EspecialidadesRutas);
-app.use('/api/v1/estadisticas', passport.authenticate('jwt', {session:false}), v1EstadisticasRutas);
-app.use('/api/v1/obras-sociales', passport.authenticate('jwt', {session:false}), v1ObrasSocialesRutas);
-app.use('/api/v1/medicos', passport.authenticate('jwt', {session:false}), v1MedicosRutas);
-app.use('/api/v1/pacientes', passport.authenticate('jwt', {session:false}), v1PacientesRutas);
-app.use('/api/v1/turnos-reservas', passport.authenticate('jwt', {session:false}), v1TurnosReservas);
-
+app.use('/api/v1/especialidades', passport.authenticate('jwt', { session: false }), v1EspecialidadesRutas);
+app.use('/api/v1/estadisticas', passport.authenticate('jwt', { session: false }), v1EstadisticasRutas);
+app.use('/api/v1/obras-sociales', passport.authenticate('jwt', { session: false }), v1ObrasSocialesRutas);
+app.use('/api/v1/medicos', passport.authenticate('jwt', { session: false }), v1MedicosRutas);
+app.use('/api/v1/pacientes', passport.authenticate('jwt', { session: false }), v1PacientesRutas);
+app.use('/api/v1/turnos-reservas', passport.authenticate('jwt', { session: false }), v1TurnosReservas);
+app.use('/api/v1/usuarios', passport.authenticate('jwt', { session: false }), v1UsuariosRutas);
 
 /*
 |--------------------------------------------------------------------------
@@ -87,14 +68,8 @@ app.use('/api/v1/turnos-reservas', passport.authenticate('jwt', {session:false})
 */
 app.use(manejarErrores);
 
-const PUERTO = process.env.PORT;
+const PUERTO = process.env.PUERTO || 3000;
 
-/*
-|--------------------------------------------------------------------------
-| INICIAR SERVIDOR
-|--------------------------------------------------------------------------
-*/
-app.listen(PUERTO || 3000, () => {
-
+app.listen(PUERTO, () => {
     console.log(`Servidor iniciado en puerto ${PUERTO}`);
 });

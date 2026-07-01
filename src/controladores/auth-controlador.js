@@ -1,28 +1,39 @@
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
+import { pool } from '../db/conexion.js';
 
-export default class AuthController{
-    login = async (req, res) => {        
-        passport.authenticate('local', {session: false}, (err, usuario, info) => {
-            if (err || !usuario) {
-                return res.status(400).json({
-                    estado: false,
-                    mensaje: "Solicitud incorrecta." 
-                })
+export default class AuthControlador {
+
+    login = async (req, res, next) => {
+        try {
+            const { email, contrasenia } = req.body;
+
+            const sql = `
+                SELECT id_usuario, CONCAT(nombres, ' ', apellido) AS usuario, rol
+                FROM usuarios
+                WHERE email = ? AND contrasenia = SHA2(?, 256) AND activo = 1
+            `;
+            const [rows] = await pool.execute(sql, [email, contrasenia]);
+
+            if (rows.length === 0) {
+                return res.status(401).json({ estado: false, mensaje: 'Credenciales incorrectas' });
             }
-            // ARMO EL TOKEN Y ENVIO CLIENTE
-            req.login(usuario, { session: false }, (err) => {
-                if(err){
-                    res.send(err);
-                }
-                // ARMAMOS EL TOKEN CON LOS DATOS DEL USUARIO Y UNA EXPIRACION
-                const token = jwt.sign(usuario, process.env.JWT_SECRET, { expiresIn: '1h'});
 
-                return res.json({
-                    estado: true, 
-                    token: token
-                });
-            })
-        })(req, res);
-    }
-}   
+            const usuario = rows[0];
+            const token = jwt.sign(
+                { id_usuario: usuario.id_usuario, rol: usuario.rol },
+                process.env.JWT_SECRET,
+                { expiresIn: '8h' }
+            );
+
+            res.status(200).json({
+                estado: true,
+                mensaje: 'Login exitoso',
+                token,
+                usuario: { id: usuario.id_usuario, nombre: usuario.usuario, rol: usuario.rol }
+            });
+
+        } catch (error) {
+            next(error);
+        }
+    };
+}
