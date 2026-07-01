@@ -1,19 +1,19 @@
 import express from 'express';
 
-import EspecialidadesControlador from "../controladores/especialidades-controlador.js";
+import EspecialidadesControlador from "../../controladores/especialidades-controlador.js";
 
 import {
     validarCrearEspecialidad,
     validarEditarEspecialidad,
     validarIdEspecialidad
-} from "../validaciones/especialidades-validacion.js";
+} from "../../validaciones/especialidades-validacion.js";
 
-import { validarCampos } from "../middlewares/validar-campos.js";
+import { validarCampos } from "../../middlewares/validar-campos.js";
 
 import {
     esAutenticado,
     verificarRol
-} from "../middlewares/auth-middleware.js";
+} from "../../middlewares/auth-middleware.js";
 
 const router = express.Router();
 

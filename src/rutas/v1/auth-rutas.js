@@ -1,8 +1,8 @@
 import express from 'express';
-import AuthController from '../controladores/auth-controlador.js';
+import AuthController from '../../controladores/auth-controlador.js';
 
 import { check } from 'express-validator';
-import { validarCampos } from '../middlewares/validar-campos.js';
+import { validarCampos } from '../../middlewares/validar-campos.js';
 
 const router = express.Router();
 const authController = new AuthController();

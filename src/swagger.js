@@ -15,7 +15,7 @@ url: "http://localhost:3000"
 }
 ]
 },
-apis: ["./src/rutas/*.js"]
+apis: ["./src/rutas/v1/*.js"]
 };
 
 const specs = swaggerJsdoc(options);

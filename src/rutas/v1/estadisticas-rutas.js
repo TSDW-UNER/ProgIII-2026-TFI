@@ -1,6 +1,6 @@
 import express from "express";
 
-import EstadisticasControlador from "../controladores/estadisticas-controlador.js";
+import EstadisticasControlador from "../../controladores/estadisticas-controlador.js";
 
 const router = express.Router();
 

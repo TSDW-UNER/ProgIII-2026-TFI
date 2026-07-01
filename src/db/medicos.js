@@ -133,11 +133,11 @@ export default class Medicos {
         try {
             await conexion.beginTransaction();
 
-            // 1. Limpiamos relaciones previas para evitar conflictos de duplicados
+            // Limpiamos relaciones previas para evitar conflictos de duplicados
             const sqlDelete = `DELETE FROM medicos_obras_sociales WHERE id_medico = ?`;
             await conexion.execute(sqlDelete, [id_medico]);
 
-            // 2. Insertamos la lista de obras sociales provistas en el array
+            // Insertamos la lista de obras sociales provistas en el array
             const sqlInsert = `
                 INSERT INTO medicos_obras_sociales (id_medico, id_obra_social) 
                 VALUES (?, ?)

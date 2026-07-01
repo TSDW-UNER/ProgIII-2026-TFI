@@ -10,14 +10,14 @@ import { testConexion } from "./db/test-conexion.js";
 import { manejarErrores } from "./middlewares/manejar-errores.js";
 import { estrategia, validacion} from './config/passport.js';
 
-import { router as v1EspecialidadesRutas } from "./rutas/especialidades-rutas.js";
-import { router as v1EstadisticasRutas } from "./rutas/estadisticas-rutas.js";
-import { router as v1ObrasSocialesRutas } from "./rutas/obras-sociales-rutas.js";
-import { router as v1MedicosRutas } from "./rutas/medicos-rutas.js";
-import { router as v1PacientesRutas } from "./rutas/pacientes-rutas.js";
-import { router as v1TurnosReservas } from "./rutas/turnos-reservas-rutas.js";
+import { router as v1EspecialidadesRutas } from "./rutas/v1/especialidades-rutas.js";
+import { router as v1EstadisticasRutas } from "./rutas/v1/estadisticas-rutas.js";
+import { router as v1ObrasSocialesRutas } from "./rutas/v1/obras-sociales-rutas.js";
+import { router as v1MedicosRutas } from "./rutas/v1/medicos-rutas.js";
+import { router as v1PacientesRutas } from "./rutas/v1/pacientes-rutas.js";
+import { router as v1TurnosReservas } from "./rutas/v1/turnos-reservas-rutas.js";
 
-import { router as v1AuthRutas } from "./rutas/auth-rutas.js";
+import { router as v1AuthRutas } from "./rutas/v1/auth-rutas.js";
 import { swaggerUi, specs } from "./swagger.js";
 const app = express();
 
@@ -73,10 +73,10 @@ app.use(passport.initialize());
 app.use('/api/v1/auth', v1AuthRutas);
 
 app.use('/api/v1/especialidades', passport.authenticate('jwt', {session:false}), v1EspecialidadesRutas);
-app.use('/api/v1/estadisticas', v1EstadisticasRutas);
-app.use('/api/v1/obras-sociales', v1ObrasSocialesRutas);
-app.use('/api/v1/medicos', v1MedicosRutas);
-app.use('/api/v1/pacientes', v1PacientesRutas);
+app.use('/api/v1/estadisticas', passport.authenticate('jwt', {session:false}), v1EstadisticasRutas);
+app.use('/api/v1/obras-sociales', passport.authenticate('jwt', {session:false}), v1ObrasSocialesRutas);
+app.use('/api/v1/medicos', passport.authenticate('jwt', {session:false}), v1MedicosRutas);
+app.use('/api/v1/pacientes', passport.authenticate('jwt', {session:false}), v1PacientesRutas);
 app.use('/api/v1/turnos-reservas', passport.authenticate('jwt', {session:false}), v1TurnosReservas);
 
 

@@ -1,9 +1,9 @@
 import express  from 'express';
 import { check, param } from 'express-validator';
-import { validarCampos } from '../middlewares/validar-campos.js'
+import { validarCampos } from '../../middlewares/validar-campos.js'
 
-import TransformarDTO from '../middlewares/transformar-dtos.js';
-import TurnosReservasControlador from '../controladores/turnos-reservas-controlador.js'
+import TransformarDTO from '../../middlewares/transformar-dtos.js';
+import TurnosReservasControlador from '../../controladores/turnos-reservas-controlador.js'
 
 const router = express.Router();
 

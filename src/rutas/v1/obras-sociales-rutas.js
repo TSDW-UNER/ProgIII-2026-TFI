@@ -1,15 +1,15 @@
 import express from 'express';
-import ObrasSocialesControlador from "../controladores/obras-sociales-controlador.js";
-import { validarCampos } from "../middlewares/validar-campos.js";
+import ObrasSocialesControlador from "../../controladores/obras-sociales-controlador.js";
+import { validarCampos } from "../../middlewares/validar-campos.js";
 import {
     validarCrearObraSocial,
     validarEditarObraSocial,
     validarIdObraSocial
-} from "../validaciones/obras-sociales-validacion.js";
+} from "../../validaciones/obras-sociales-validacion.js";
 import {
     esAutenticado,
     verificarRol
-} from "../middlewares/auth-middleware.js";
+} from "../../middlewares/auth-middleware.js";
 
 const router = express.Router();
 const controlador = new ObrasSocialesControlador();
